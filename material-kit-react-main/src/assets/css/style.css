@@ -1,0 +1,21 @@
+
+.lable-custome {
+    color: #211fb1;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.lable-star {
+    color: red;
+}
+
+
+.select__control {
+    border: none; /* Bỏ viền mặc định */
+    border-bottom: 2px solid #000; /* Thêm viền dưới */
+  }
+  
+  .select__control--is-focused {
+    border: none; /* Bỏ viền khi đang focus */
+    border-bottom: 2px solid #4CAF50; /* Thêm viền dưới màu khi focus */
+  }
