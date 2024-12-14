@@ -69,7 +69,10 @@ import Toggles from "layouts/sections/elements/toggles";
 import Typography from "layouts/sections/elements/typography";
 // phần custome không liên quan đến mặc định hệ thông
 import XetTuyen from "pages/DangKyXetTuyen";
-
+import QLSV from "pages/QuanLySinhVien/view";
+import Add from "pages/QuanLySinhVien/Add";
+import Edit from "pages/QuanLySinhVien/Edit";
+import StudentAddCourse from "pages/QuanLySinhVien/KhoaHoc/StudentAddCourse"
 const routes = [
   {
     name: "pages",
@@ -272,6 +275,16 @@ const routes = [
     href: "https://www.github.com/creativetimofficial/material-kit-react",
   },
   {
+    name: "Quản lý",
+    collapse: [
+      {
+        name: "Sinh viên",
+        route: "/quanlysinhvien",
+        component: <QLSV />,
+      },
+    ],
+  },
+  {
     name: "Xét tuyển",
     collapse: [
       {
@@ -281,6 +294,23 @@ const routes = [
       },
     ],
   },
+  {
+  
+    
+        route: "/quanlysinhvien/add-sinh-vien",
+        component: <Add />,
+      },
+      {
+  
+        route: "/quanlysinhvien/edit-sinh-vien/:id",
+        component: <Edit />,
+      },
+      {
+  
+        route: "/quanlysinhvien/add-course-student/:id",
+        component: <StudentAddCourse />,
+      },
+  
 ];
 
 export default routes;
