@@ -104,6 +104,18 @@ const getDanhSachKhoaHoc = async() => {
 }
 }
 
+const [checkedValues, setCheckedValues] = useState([]);
+
+const handleCheckboxChange = (ma_course) => {
+  setCheckedValues((prev) =>
+    prev.includes(ma_course)
+      ? prev.filter((item) => item !== ma_course) // Bỏ khỏi danh sách nếu đã tồn tại
+      : [...prev, ma_course] // Thêm vào danh sách nếu chưa có
+  );
+};
+
+
+console.log("Checkbox đã được chọn:", checkedValues);
 
 useEffect(() => {
  
@@ -237,7 +249,9 @@ useEffect(() => {
         <div className="flex w-max gap-4">
             {
               (khoahoc.map((data, index) => (
-                <Checkbox key={index} color="blue" label={data.tenkhoahoc}  />
+                <Checkbox key={index} color="blue" label={data.tenkhoahoc} value={data.ma_course}
+                onChange={(e) => handleCheckboxChange(data.ma_course)}
+                />
               )))
 
 

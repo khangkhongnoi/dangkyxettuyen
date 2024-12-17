@@ -10,7 +10,7 @@ import Card from "@mui/material/Card";
 import MKTypography from "components/MKTypography";
 
 
-import { PencilIcon, PlusIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, PencilSquareIcon, PlusIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import "../../assets/css/style.css"
 
 import { Alert, IconButton, Input, Tooltip } from "@material-tailwind/react";
@@ -137,11 +137,12 @@ const handleOpenAddCourse = () => {
 };
 
 const [openEditCourse, setOpenEditCourse] = useState(false);
-const handleOpenEditCourse = () => {
+const [ma_course, setma_course] = useState(0)
+const handleOpenEditCourse = (ma_course, tenkhoahoc) => {
    
-    
+  setcourse({...course, tenkhoahoc:tenkhoahoc})
   setOpenEditCourse(true)
-
+setma_course(ma_course)
 };
 const [course, setcourse] = useState({
   tenkhoahoc: '',
@@ -170,7 +171,7 @@ const handleSubmitCourse = () => {
      
     getDanhSachKhoaHoc()
 
-    alert("Thêm khoa học thành công")
+    alert("Edit khoa học thành công")
 
     setcourse({...course, "tenkhoahoc":""})
     }
@@ -178,7 +179,7 @@ const handleSubmitCourse = () => {
     else
     {
      
-      setOpenAlter(false)
+      setOpenEditCourse(false)
     }
   })
   .catch((error) => {
@@ -189,6 +190,79 @@ const handleSubmitCourse = () => {
 
 }
 
+const handleSubmitEditCourse = () => {
+  console.log(course)
+axios
+.put(`http://localhost:2020/course-service/course/${ma_course}`,course, {
+ 
+  validateStatus: () => {
+    return true;
+  }
+})
+.then((response) => {
+  console.log(response) // Xử lý phản hồi từ server
+  if(response.data)
+  {
+   
+  getDanhSachKhoaHoc()
+
+  alert("Thêm khoa học thành công")
+
+ 
+  }
+   
+  else
+  {
+   
+    setOpenAlter(false)
+  }
+})
+.catch((error) => {
+  console.error('Error:', error)
+  console.log(error.response.data.message)
+ 
+})
+
+}
+
+const [openXoaKH, setOpenXoaKH] = useState(false);
+const [txtXoa, settxtXoa] = useState("")
+const [maxoa, setmxoa] = useState(0)
+const handleOpenXoaKH = (makhoa,hoten) => {
+  settxtXoa(hoten)
+setmxoa(makhoa)
+setOpenXoaKH(!open)
+};
+
+
+const onClickXoaCourse = async () => {
+
+  if(maxoa === 0)
+{
+  alert("Mã course không hợp lệ")
+  return
+}
+
+axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
+  validateStatus: () => {
+    return true;
+  }
+})
+.then((response) => {
+
+
+  if(response.data)
+  {
+
+    setOpenXoaKH(false)
+    getDanhSachKhoaHoc()
+   alert("Xóa khoa học thành công")
+  }
+   
+  else
+    alert("Xóa sinh viên không thành công")
+})
+}
         return(
             <>
             <MKBox
@@ -422,24 +496,24 @@ const handleSubmitCourse = () => {
              
                 
                
-                <Tooltip content="Edit User">
+                <Tooltip content="Edit khóa học">
                         <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4"  onClick={handleOpenEditCourse}/>
+                          <PencilSquareIcon className="h-4 w-4"  onClick={() => handleOpenEditCourse(data.ma_course, data.tenkhoahoc)}/>
                         </IconButton>
                       </Tooltip>
                       
              
-              <Tooltip content="Delete User">
-                        <IconButton variant="text"  className="text-red-500">
-                          <Delete  className="h-5 w-7" />
+              <Tooltip content="Delete khóa học">
+                        <IconButton variant="text"  className="text-red-500 " onClick= {() => handleOpenXoaKH(data.ma_course, data.tenkhoahoc)}>
+                          <Delete  className="h-5 w-7"  />
                         </IconButton>
                       </Tooltip>
                       <Link to={`/quanlysinhvien/edit-sinh-vien/${data.mastudent}`}>
-                <Tooltip content="Thêm khóa học">
+                {/* <Tooltip content="Thêm khóa học">
                         <IconButton variant="text">
                           <PlusIcon className="h-4 w-4" />
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                       
               </Link>
               </td>
@@ -501,7 +575,7 @@ const handleSubmitCourse = () => {
         <DialogBody>
         
         <div>
-                          <Input color="blue" label="Tên khóa học" name="tenkhoahoc" onChange={(e) => onInputChange(e)} />
+                          <Input color="blue" label="Tên khóa học" name="tenkhoahoc" value={course.tenkhoahoc} onChange={(e) => onInputChange(e)} />
                         </div>
          </DialogBody>
         <DialogFooter>
@@ -513,8 +587,28 @@ const handleSubmitCourse = () => {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleSubmitCourse}>
-            <span>save</span>
+          <Button variant="gradient" color="green" onClick={handleSubmitEditCourse}>
+            <span>update</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      <Dialog open={openXoaKH}   size="xs" handler={handleOpenXoaKH}>
+        <DialogHeader>Thông báo</DialogHeader>
+        <DialogBody>
+          Bạn có muốn xóa khóa học <span className="text-red-500">{txtXoa}</span> không ?
+         </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setOpenXoaKH(!openXoaKH)}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={onClickXoaCourse}>
+            <span>Xóa</span>
           </Button>
         </DialogFooter>
       </Dialog>
