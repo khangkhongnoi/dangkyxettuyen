@@ -16,61 +16,33 @@ import { Alert, Breadcrumbs, Button, Checkbox, Input, Option, Select } from "@ma
 import bgImage from "assets/images/bg-about-us.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
 function StudentAddCourse() {
  
+const { id } = useParams()
 
-  const [student, setstudent] = useState({
-      hoten: '',
-      gioitinh: 0,
-      ngaysinh: '',
-      diachi: '',
-      mssv: '',
-      khoa: '',
-      sdt: '',
-      email: '',
-  })
 
-  const {hoten, gioitinh, ngaysinh, diachi, mssv,khoa,sdt,email} = student
 
-  const onInputChange = (e) => {
-    console.log(e)
-    const name = e.target.name
-     const value = e.target.value
-     if(name === 'sdt'){
-        if(value.length > 12){
-            alert('Không được vượt quá 12 kí tự')
-            e.target.value = value.slice(0, 12);
-        }
-     }
-    setstudent({...student, [e.target.name]: e.target.value})
-  }
-
-  const onChangeGT = (e) => {
-      
-        setstudent({...student, "gioitinh": e})
-  }
 
   const handleSubmit = (e) => {
+  
     e.preventDefault()
-      
-    console.log(student)
 
     axios
-    .post(`http://localhost:2020/student-service/student`, student, {
+    .post(`http://localhost:2020/registration-service/registration/register/${id}`, checkedValues, {
       validateStatus: () => {
         return true;
       }
     })
     .then((response) => {
       console.log(response) // Xử lý phản hồi từ server
-      if(response)
-        setOpenAlter(true)
+      if(response.status === 200)
+        alert("Thêm khóa học thành công")
        
       else
-      alert("Thêm sinh viên không thành công")
+      alert("Thêm khóa học không thành công")
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -106,11 +78,11 @@ const getDanhSachKhoaHoc = async() => {
 
 const [checkedValues, setCheckedValues] = useState([]);
 
-const handleCheckboxChange = (ma_course) => {
+const handleCheckboxChange = (courseId) => {
   setCheckedValues((prev) =>
-    prev.includes(ma_course)
-      ? prev.filter((item) => item !== ma_course) // Bỏ khỏi danh sách nếu đã tồn tại
-      : [...prev, ma_course] // Thêm vào danh sách nếu chưa có
+    prev.includes(courseId)
+      ? prev.filter((item) => item !== courseId) // Bỏ khóa học ra khỏi danh sách
+      : [...prev, courseId] // Thêm khóa học vào danh sách
   );
 };
 
@@ -120,6 +92,21 @@ console.log("Checkbox đã được chọn:", checkedValues);
 useEffect(() => {
  
   getDanhSachKhoaHoc();
+
+  axios.get(`http://localhost:2020/registration-service/registration/courses/${id}`)
+  .then(response => {
+    console.log(response)
+    
+    const registeredCourses = response.data
+    .filter((item) => item.studentId === id) // Lọc các khóa học đã đăng ký của sinh viên có id tương ứng
+    .map((item) => parseInt(item.courseId)); // Lấy danh sách các courseId
+
+  setCheckedValues(registeredCourses); 
+  })
+  .catch(error => {
+    console.error("There was an error fetching the courses!", error);
+  });
+
 }, [])
   return (
     <>
@@ -149,35 +136,19 @@ useEffect(() => {
             >
              VTTU{" "}
             </MKTypography>
-            <MKTypography
-              variant="body1"
-              color="white"
-              textAlign="center"
-              px={{ xs: 6, lg: 12 }}
-              mt={1}
-            >
-              Free & Open Source Web UI Kit built over ReactJS &amp; MUI. Join over 1.6 million
-              developers around the world.
-            </MKTypography>
+         
           </Grid>
         </Container>
       </MKBox>
-
-      <Alert className="absolute top-3 left-2 w-72" open={openAlter}   animate={{
-          mount: { y: 0 },
-          unmount: { y: 100 },
-        }} onClose={() => setOpenAlter(false)}>
-       Thêm sinh viên thành công
-      </Alert>
 
       <Card
         sx={{
           p: 2,
           //   mx: { xs: 2, lg: 3 },
-          mt: -20,
+          mt: -40,
           mb: 4,
           mx: "auto", // Tự động căn giữa theo trục ngang
-          width: "60%",
+          width: "70%",
           //   backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
           backdropFilter: "saturate(200%) blur(30px)",
           boxShadow: ({ boxShadows: { xxl } }) => xxl,
@@ -250,6 +221,7 @@ useEffect(() => {
             {
               (khoahoc.map((data, index) => (
                 <Checkbox key={index} color="blue" label={data.tenkhoahoc} value={data.ma_course}
+                checked={checkedValues.includes(data.ma_course)}
                 onChange={(e) => handleCheckboxChange(data.ma_course)}
                 />
               )))

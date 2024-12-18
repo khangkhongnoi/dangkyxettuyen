@@ -29,6 +29,8 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function View() {
 
@@ -405,27 +407,26 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
                   {data.email}
                 </Typography>
               </td>
-              <td className="p-4">
+              <td className="p-4 text-sm">
              
                 
                 <Link to={`/quanlysinhvien/edit-sinh-vien/${data.mastudent}`}>
                 <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
+              
+                       <FontAwesomeIcon icon={faPenToSquare} className="text-blue-500"/>
+                      
+                       
                       </Tooltip>
                       
               </Link>
               <Tooltip content="Delete User">
-                        <IconButton variant="text" onClick={() => handleOpen(data.mastudent,data.hoten)} className="text-red-500">
-                          <Delete  className="h-5 w-7" />
-                        </IconButton>
+                      
+                        <FontAwesomeIcon icon={faTrash} onClick={() => handleOpen(data.mastudent,data.hoten)} className="text-red-500 ml-3 " />
+                      
                       </Tooltip>
                       <Link to={`/quanlysinhvien/add-course-student/${data.mastudent}`}>
                 <Tooltip content="Thêm khóa học">
-                        <IconButton variant="text">
-                          <PlusIcon className="h-4 w-4" />
-                        </IconButton>
+                <FontAwesomeIcon icon={faPlus} className="ml-3" />
                       </Tooltip>
                       
               </Link>
@@ -492,9 +493,8 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
                 </Typography>
               </td>
               
-              <td className="p-4">
-             
-                
+              <td className="p-4 text-sm">
+            
                
                 <Tooltip content="Edit khóa học">
                         <IconButton variant="text">
@@ -504,9 +504,9 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
                       
              
               <Tooltip content="Delete khóa học">
-                        <IconButton variant="text"  className="text-red-500 " onClick= {() => handleOpenXoaKH(data.ma_course, data.tenkhoahoc)}>
-                          <Delete  className="h-5 w-7"  />
-                        </IconButton>
+                      
+                        <FontAwesomeIcon className="text-red-500" icon={faTrash}  onClick= {() => handleOpenXoaKH(data.ma_course, data.tenkhoahoc)}/>
+                      
                       </Tooltip>
                       <Link to={`/quanlysinhvien/edit-sinh-vien/${data.mastudent}`}>
                 {/* <Tooltip content="Thêm khóa học">
@@ -522,6 +522,9 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
         </tbody>
       </table>
       </div>
+
+
+      
           </Card>
 
          
