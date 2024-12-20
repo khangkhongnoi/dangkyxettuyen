@@ -76,9 +76,12 @@ const getDanhSachKhoaHoc = async() => {
       setkhoahoc(result.data)
     }
 
-   
+    if(result.status === 500)
+      alert("Không thể kết nối tới service khóa học")
 } catch (error) {
   console.log(error)
+  if(error.status === 500)
+    alert("Không thể kết nối tới service đăng ký khóa học")
 }
 }
 
@@ -173,9 +176,9 @@ const handleSubmitCourse = () => {
      
     getDanhSachKhoaHoc()
 
-    alert("Edit khoa học thành công")
+    alert("Thêm khóa học thành công")
 
-    setcourse({...course, "tenkhoahoc":""})
+    setcourse({...course, ["tenkhoahoc"]:""})
     }
      
     else
@@ -268,7 +271,7 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
         return(
             <>
             <MKBox
-            minHeight="75vh"
+            minHeight="100vh"
             width="100%"
             sx={{
               backgroundImage: `url(${bgImage})`,
@@ -278,7 +281,7 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
               placeItems: "center",
             }}
           >
-            <Container>
+            {/* <Container>
               <Grid container item xs={12} lg={7} justifyContent="center" mx="auto">
                 <MKTypography
                   variant="h1"
@@ -295,7 +298,7 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
                 </MKTypography>
               
               </Grid>
-            </Container>
+            </Container> */}
           </MKBox>
 
 
@@ -311,7 +314,7 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
             sx={{
               p: 2,
             //   mx: { xs: 2, lg: 3 },
-              mt: -20,
+              mt: -90,
               mb: 4,
               mx: "auto", // Tự động căn giữa theo trục ngang
               width: "70%",
@@ -554,7 +557,7 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
         <DialogBody>
         
         <div>
-                          <Input color="blue" label="Tên khóa học" name="tenkhoahoc" onChange={(e) => onInputChange(e)} />
+                          <Input color="blue" label="Tên khóa học" name="tenkhoahoc" value={course.tenkhoahoc} onChange={(e) => onInputChange(e)} />
                         </div>
          </DialogBody>
         <DialogFooter>

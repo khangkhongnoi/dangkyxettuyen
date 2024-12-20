@@ -11,7 +11,7 @@ import MKTypography from "components/MKTypography";
 
 
 
-import { Alert, Breadcrumbs, Button, Checkbox, Input, Option, Select } from "@material-tailwind/react";
+import {  Breadcrumbs, Button, Checkbox,} from "@material-tailwind/react";
 // Images
 import bgImage from "assets/images/bg-about-us.jpg";
 import { useEffect, useState } from "react";
@@ -47,12 +47,13 @@ const { id } = useParams()
     .catch((error) => {
       console.error('Error:', error)
       console.log(error.response.data.message)
-     
+      if(error.status === 500)
+        alert("Không thể kết nối tới service đăng ký khóa học")
     })
 
   }
   
-  const [openAlter, setOpenAlter] = useState(false);
+
 
 
   const [khoahoc, setkhoahoc]= useState([])
@@ -89,8 +90,33 @@ const handleCheckboxChange = (courseId) => {
 
 console.log("Checkbox đã được chọn:", checkedValues);
 
+const [student, setstudent] = useState([])
+const getDanhSachSinhVien = async() => {
+  try {
+    const result = await axios.get(`http://localhost:2020/student-service/student/${id}`,{
+
+      validateStatus: () => {
+        return true;
+      }
+    });
+    console.log(result)
+    if(result.status === 200){
+
+      setstudent(result.data)
+      console.log(result.data)
+    }
+
+   
+} catch (error) {
+  console.log(error)
+  if(error.status === 500)
+    alert("Không thể kết nối tới service đăng ký khóa học")
+}
+}
+
 useEffect(() => {
  
+  getDanhSachSinhVien();
   getDanhSachKhoaHoc();
 
   axios.get(`http://localhost:2020/registration-service/registration/courses/${id}`)
@@ -105,6 +131,8 @@ useEffect(() => {
   })
   .catch(error => {
     console.error("There was an error fetching the courses!", error);
+    if(error.status === 500)
+      alert("Không thể kết nối tới service đăng ký khóa học")
   });
 
 }, [])
@@ -156,10 +184,13 @@ useEffect(() => {
       >
           <div className="flex w-max gap-4">
              
+       
               <Breadcrumbs>
+              <Link to={`/`}>
       <a href="#" className="opacity-60">
         Trang chủ
       </a>
+      </Link>
       <Link to={`/quanlysinhvien`}>
       <a href="#" className="opacity-60">
         Trở về
@@ -177,39 +208,39 @@ useEffect(() => {
             <form className="mt-8 mb-2  max-w-screen-lg " onSubmit={handleSubmit}>
               <div className="columns-4  w-max gap-4">
                 <div>
-                <MKTypography><span className="text-blue-500">Họ tên:</span> Nguyễn Văn A</MKTypography>
+                <MKTypography><span className="text-blue-500">Họ tên:</span> {student.hoten}</MKTypography>
                
                 </div>
 
                 <div>
-                <MKTypography> <span className="text-blue-500">Giới tính:</span> Nam</MKTypography>
+                <MKTypography> <span className="text-blue-500">Giới tính:</span> {student.gioitinh === 0 ? 'Nam' : 'Nữ'} </MKTypography>
                 </div>
                 <div>
                   
-                  <MKTypography> <span className="text-blue-500">Ngày sinh:</span>   20/01/2005</MKTypography>
+                  <MKTypography> <span className="text-blue-500">Ngày sinh:</span>   {student.ngaysinh}</MKTypography>
                 </div>
                 <div>
                  
-                  <MKTypography><span className="text-blue-500"> Đại chỉ:</span> Hậu Giang</MKTypography>
+                  <MKTypography><span className="text-blue-500"> Đại chỉ:</span> {student.diachi}</MKTypography>
                 </div>
               </div>
 
-              <div className="columns-2 gap-4 mt-5">
+              <div className="columns-2 gap-4 ">
               <div>
                  
-                 <MKTypography><span className="text-blue-500">MSSV:</span>12345678 </MKTypography>
+                 <MKTypography><span className="text-blue-500">MSSV:</span> {student.mssv} </MKTypography>
                </div>
                <div>
                  
-                 <MKTypography><span className="text-blue-500">Khóa:</span>: 17</MKTypography>
+                 <MKTypography><span className="text-blue-500">Khóa:</span>: {student.khoa}</MKTypography>
                </div>
                <div>
                  
-                 <MKTypography><span className="text-blue-500">Số điện thoại:</span> 0123456789</MKTypography>
+                 <MKTypography><span className="text-blue-500">Số điện thoại:</span> {student.sdt}</MKTypography>
                </div>
                <div>
                  
-                 <MKTypography> <span className="text-blue-500">Email:</span> 12345678@stu.edu.vn</MKTypography>
+                 <MKTypography> <span className="text-blue-500">Email:</span> {student.email}</MKTypography>
                </div>
               </div>
             <hr />
