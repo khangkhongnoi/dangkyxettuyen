@@ -206,7 +206,7 @@ useEffect(() => {
         <Container>
           <Grid container item xs={12} lg={7} justifyContent="center" mx="auto">
             <form className="mt-8 mb-2  max-w-screen-lg " onSubmit={handleSubmit}>
-              <div className="columns-4  w-max gap-4">
+              <div className=" w-max gap-4">
                 <div>
                 <MKTypography><span className="text-blue-500">Họ tên:</span> {student.hoten}</MKTypography>
                
@@ -232,7 +232,8 @@ useEffect(() => {
                </div>
                <div>
                  
-                 <MKTypography><span className="text-blue-500">Khóa:</span>: {student.khoa}</MKTypography>
+                 <MKTypography><span className="text-blue-500">Khóa:</span>
+                  {student.khoa}</MKTypography>
                </div>
                <div>
                  

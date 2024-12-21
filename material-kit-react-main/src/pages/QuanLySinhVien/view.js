@@ -54,6 +54,9 @@ const getDanhSachSinhVien = async() => {
 
         setdssinhvien(result.data)
     }
+    else {
+        alert("Không thể kết nối tới service student")
+    }
 
    
 } catch (error) {
@@ -171,6 +174,7 @@ const handleSubmitCourse = () => {
   })
   .then((response) => {
     console.log(response) // Xử lý phản hồi từ server
+    if(response.status === 200){
     if(response.data)
     {
      
@@ -186,6 +190,9 @@ const handleSubmitCourse = () => {
      
       setOpenEditCourse(false)
     }
+  }else {
+    alert("Thêm khóa không học thành công")
+  }
   })
   .catch((error) => {
     console.error('Error:', error)
@@ -206,6 +213,8 @@ axios
 })
 .then((response) => {
   console.log(response) // Xử lý phản hồi từ server
+ 
+ if(response.status === 200){
   if(response.data)
   {
    
@@ -221,6 +230,9 @@ axios
    
     setOpenAlter(false)
   }
+}else {
+  alert("Thêm khoa không học thành công")
+}
 })
 .catch((error) => {
   console.error('Error:', error)
@@ -500,15 +512,15 @@ axios.delete(`http://localhost:2020/course-service/course/${maxoa}`, {
             
                
                 <Tooltip content="Edit khóa học">
-                        <IconButton variant="text">
-                          <PencilSquareIcon className="h-4 w-4"  onClick={() => handleOpenEditCourse(data.ma_course, data.tenkhoahoc)}/>
-                        </IconButton>
+                       
+                        <FontAwesomeIcon icon={faPenToSquare} className="text-blue-500" onClick={() => handleOpenEditCourse(data.ma_course, data.tenkhoahoc)}/>
+                      
                       </Tooltip>
                       
              
               <Tooltip content="Delete khóa học">
                       
-                        <FontAwesomeIcon className="text-red-500" icon={faTrash}  onClick= {() => handleOpenXoaKH(data.ma_course, data.tenkhoahoc)}/>
+                        <FontAwesomeIcon className="text-red-500 ml-3" icon={faTrash}  onClick= {() => handleOpenXoaKH(data.ma_course, data.tenkhoahoc)}/>
                       
                       </Tooltip>
                       <Link to={`/quanlysinhvien/edit-sinh-vien/${data.mastudent}`}>
